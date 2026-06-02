@@ -15,12 +15,17 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v4
 
+    # 2. Проверяем наличие контейнера перед его остановкой
     - name: Stop old container
       run: |
-        $ErrorActionPreference = 'SilentlyContinue'
-        docker stop node-demo-app
-        docker rm node-demo-app
-        $ErrorActionPreference = 'Continue'
+        $containerExists = docker ps -a --filter "name=node-demo-app" --format "{{.Names}}"
+        if ($containerExists -eq "node-demo-app") {
+            write-host "Контейнер найден. Останавливаем и удаляем..."
+            docker stop node-demo-app
+            docker rm node-demo-app
+        } else {
+            write-host "Старый контейнер не запущен, пропускаем шаг."
+        }
       shell: powershell
 
     - name: Build Docker image
