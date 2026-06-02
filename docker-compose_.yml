@@ -1,0 +1,30 @@
+version: '3.8'
+
+services:
+  # Наша база данных
+  mongodb:
+    image: mongo:6.0
+    container_name: demo-mongodb
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo-data:/data/db
+    restart: always
+
+  # Наше Node.js приложение
+  web-app:
+    build:
+      context: .
+      dockerfile: build/Dockerfile
+    container_name: node-demo-app
+    ports:
+      - "3000:3000"
+    environment:
+      # Передаем адрес базы данных внутри сети Docker
+      - TODO_MONGO_CONNSTR=mongodb://mongodb:27017/demoapp
+    depends_on:
+      - mongodb
+    restart: always
+
+volumes:
+  mongo-data:

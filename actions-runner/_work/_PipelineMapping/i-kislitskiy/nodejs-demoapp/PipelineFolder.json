@@ -1,0 +1,12 @@
+﻿{
+  "repositoryName": "i-kislitskiy/nodejs-demoapp",
+  "pipelineDirectory": "nodejs-demoapp",
+  "workspaceDirectory": "nodejs-demoapp\\nodejs-demoapp",
+  "repositories": {
+    "i-kislitskiy/nodejs-demoapp": {
+      "repositoryPath": "nodejs-demoapp\\nodejs-demoapp",
+      "lastRunOn": "06/02/2026 10:07:16 +03:00"
+    }
+  },
+  "lastRunOn": "06/02/2026 15:45:38 +03:00"
+}

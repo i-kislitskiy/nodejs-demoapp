@@ -1,0 +1,36 @@
+name: Local Docker CD
+
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: "true"
+
+on:
+  push:
+    branches: [ "main" ]
+
+jobs:
+  deploy:
+    runs-on: self-hosted
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    # 2. Проверяем наличие контейнера перед его остановкой
+    - name: Stop old container
+      run: |
+        $containerExists = docker ps -a --filter "name=node-demo-app" --format "{{.Names}}"
+        if ($containerExists -eq "node-demo-app") {
+            write-host "Контейнер найден. Останавливаем и удаляем..."
+            docker stop node-demo-app
+            docker rm node-demo-app
+        } else {
+            write-host "Старый контейнер не запущен, пропускаем шаг."
+        }
+      shell: powershell
+
+    - name: Build Docker image
+      run: docker build -t nodejs-demo-app:local -f build/Dockerfile .
+      working-directory: ${{ github.workspace }}
+
+    - name: Run new container
+      run: docker run -d --name node-demo-app -p 3000:3000 nodejs-demo-app:local

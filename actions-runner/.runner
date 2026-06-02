@@ -1,0 +1,11 @@
+﻿{
+  "agentId": 3,
+  "agentName": "DESKTOP-KKBB7VA",
+  "poolId": 1,
+  "poolName": "Default",
+  "serverUrl": "https://pipelinesghubeus5.actions.githubusercontent.com/q2rnXqxvd65U8sgYKESQWb84Wj2MVeLErtF6yZwF5NHN4wfvBV/",
+  "gitHubUrl": "https://github.com/i-kislitskiy/nodejs-demoapp",
+  "workFolder": "_work",
+  "useV2Flow": true,
+  "serverUrlV2": "https://broker.actions.githubusercontent.com/"
+}
