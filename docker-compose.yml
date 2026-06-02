@@ -1,7 +1,6 @@
 version: '3.8'
 
 services:
-  # Наша база данных
   mongodb:
     image: mongo:6.0
     container_name: demo-mongodb
@@ -9,9 +8,10 @@ services:
       - "27017:27017"
     volumes:
       - mongo-data:/data/db
+    networks:
+      - monitor-net
     restart: always
 
-  # Наше Node.js приложение
   web-app:
     build:
       context: .
@@ -20,11 +20,46 @@ services:
     ports:
       - "3000:3000"
     environment:
-      # Передаем адрес базы данных внутри сети Docker
       - TODO_MONGO_CONNSTR=mongodb://mongodb:27017/demoapp
     depends_on:
       - mongodb
+    networks:
+      - monitor-net
     restart: always
+
+  # База данных мониторинга (теперь без cAdvisor)
+  prometheus:
+    image: prom/prometheus:v2.45.0
+    container_name: demo-prometheus
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+      - prometheus-data:/prometheus
+    ports:
+      - "9090:9090"
+    networks:
+      - monitor-net
+    depends_on:
+      - web-app
+    restart: always
+
+  # Визуализация графиков
+  grafana:
+    image: grafana/grafana:10.0.0
+    container_name: demo-grafana
+    ports:
+      - "3001:3000"
+    volumes:
+      - grafana-data:/var/lib/grafana
+    networks:
+      - monitor-net
+    depends_on:
+      - prometheus
+    restart: always
+
+networks:
+  monitor-net:
 
 volumes:
   mongo-data:
+  prometheus-data:
+  grafana-data:

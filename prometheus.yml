@@ -1,0 +1,8 @@
+global:
+  scrape_interval: 5s # Собираем метрики каждые 5 секунд
+
+scrape_configs:
+  - job_name: 'nodejs-application'
+    metrics_path: '/metrics' # Точный роут, который открывает наше приложение
+    static_configs:
+      - targets: ['web-app:3000'] # Имя сервиса и порт из docker-compose.yml
