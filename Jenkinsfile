@@ -30,11 +30,15 @@ pipeline {
             }
         }
 
-        stage('Ansible Deploy') {
+        stage('Kubernetes Deploy') {
             steps {
-                // Запускаем Ansible Playbook для деплоя через Docker Compose
-                sh 'ansible-playbook playbook.yml'
+                // Применяем оба манифеста из Git одной командой!
+                sh '''
+                    kubectl apply -f mongo-k8s.yaml
+                    kubectl apply -f webapp-k8s.yaml
+                '''
             }
         }
+
     }
 }

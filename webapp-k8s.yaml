@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: node-app-deployment
+spec:
+  replicas: 2 # Запустим сразу 2 копии сайта для отказоустойчивости!
+  selector:
+    matchLabels:
+      app: node-app
+  template:
+    metadata:
+      labels:
+        app: node-app
+    spec:
+      containers:
+      - name: web-app
+        image: nodejs-demo-app:local # Используем образ, который собирает Jenkins
+        imagePullPolicy: Never # Говорим K8s брать образ локально, не скачивая из интернета
+        ports:
+        - containerPort: 3000
+        environment:
+        # Указываем DNS-имя базы данных, которое мы создали в mongo-k8s.yaml
+        - name: TODO_MONGO_CONNSTR
+          value: "mongodb://mongodb-service:27017/demoapp"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: node-app-service
+spec:
+  type: NodePort # Этот тип откроет порт наружу, чтобы вы могли зайти на сайт с Windows
+  selector:
+    app: node-app
+  ports:
+    - protocol: TCP
+      port: 3000
+      targetPort: 3000
+      nodePort: 32000 # Сайт будет доступен на порту 32000 вашего компьютера
