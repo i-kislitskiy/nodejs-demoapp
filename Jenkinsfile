@@ -1,6 +1,11 @@
 pipeline {
     agent any
 
+    // Указываем Jenkins автоматически подключить Node.js перед стартом
+    tools {
+        nodejs 'node20'
+    }
+
     environment {
         // Принудительно отключаем интерактивные диалоги APT внутри контейнера
         DEBIAN_FRONTEND = 'noninteractive'
