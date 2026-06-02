@@ -6,12 +6,23 @@ on:
 
 jobs:
   trigger:
-    # Запускаем строго на вашем локальном ПК, где крутится служба раннера
     runs-on: self-hosted
 
     steps:
-    - name: Trigger Jenkins Pipeline
+    - name: Trigger Jenkins Pipeline with Token
       run: |
-        # Отправляем локальный запрос в Jenkins, чтобы он начал сборку
-        Invoke-RestMethod -Uri "http://localhost:8080/job/node-demo-pipeline/build" -Method Post
+        # Замените admin на ваш логин, а ТЕКСТ_ТОКЕНА на скопированный токен из Шага 1
+        $username = "admin"
+        $token = "1102e7e9908c19a69a8556194c67bb70bb"
+        
+        # Кодируем учетные данные в формат Base64 для HTTP-заголовка
+        $pair = "${username}:${token}"
+        $bytes = [System.Text.Encoding]::ASCII.GetBytes($pair)
+        $base64 = [Convert]::ToBase64String($bytes)
+        $basicAuthValue = "Basic $base64"
+        
+        $headers = @{ Authorization = $basicAuthValue }
+        
+        # Отправляем авторизованный POST-запрос в Jenkins
+        Invoke-RestMethod -Uri "http://localhost:8080/job/node-demo-pipeline/build" -Method Post -Headers $headers
       shell: powershell
