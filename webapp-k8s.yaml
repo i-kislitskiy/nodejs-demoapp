@@ -18,7 +18,7 @@ spec:
         imagePullPolicy: Never # Говорим K8s брать образ локально, не скачивая из интернета
         ports:
         - containerPort: 3000
-        environment:
+        env:
         # Указываем DNS-имя базы данных, которое мы создали в mongo-k8s.yaml
         - name: TODO_MONGO_CONNSTR
           value: "mongodb://mongodb-service:27017/demoapp"
