@@ -36,8 +36,8 @@ pipeline {
         stage('Kubernetes Deploy') {
             steps {
                 sh '''
-                    # Безопасно импортируем локальный образ внутрь ноды Kind (без флага -t!)
-                    docker exec -i desktop-control-plane crictl load /dev/stdin < <(docker save nodejs-demo-app:local)
+                    # Сохраняем образ в архив и передаем его через стандартный пайп |
+                    docker save nodejs-demo-app:local | docker exec -i desktop-control-plane crictl load
                     
                     # Применяем манифесты в кластер
                     kubectl apply -f mongo-k8s.yaml
