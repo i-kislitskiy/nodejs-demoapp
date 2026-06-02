@@ -7,3 +7,4 @@ myvalues.yaml
 secrets.sh
 .secrets
 myparams.json
+/actions-runner/
