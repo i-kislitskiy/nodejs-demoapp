@@ -1,5 +1,5 @@
 pipeline {
-    agent any
+    agent { label 'linux-docker' }
 
     // Указываем Jenkins автоматически подключить Node.js перед стартом
     tools {
