@@ -28,11 +28,10 @@ kind: Service
 metadata:
   name: node-app-service
 spec:
-  type: NodePort # Этот тип откроет порт наружу, чтобы вы могли зайти на сайт с Windows
+  type: LoadBalancer
   selector:
     app: node-app
   ports:
     - protocol: TCP
-      port: 3000
+      port: 3005
       targetPort: 3000
-      nodePort: 32000 # Сайт будет доступен на порту 32000 вашего компьютера

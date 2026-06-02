@@ -37,7 +37,7 @@ pipeline {
             steps {
                 sh '''
                     # Сохраняем образ в архив и передаем его через стандартный пайп |
-                    #kind load docker-image nodejs-demo-app:local --name desktop
+                    docker save nodejs-demo-app:local | docker exec -i desktop-control-plane ctr -n=k8s.io images import -
                     
                     # Применяем манифесты в кластер
                     kubectl apply -f mongo-k8s.yaml
