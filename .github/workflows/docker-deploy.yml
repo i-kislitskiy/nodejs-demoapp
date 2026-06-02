@@ -30,24 +30,9 @@ jobs:
       working-directory: ${{ github.workspace }}/src
       continue-on-error: true
 
-    # 4. Проверяем наличие контейнера (выполняется только если тесты прошли успешно!)
-    - name: Stop old container
+    # 4. Сборка и запуск всей инфраструктуры (App + MongoDB) через Docker Compose
+    - name: Deploy with Docker Compose
       run: |
-        $containerExists = docker ps -a --filter "name=node-demo-app" --format "{{.Names}}"
-        if ($containerExists -eq "node-demo-app") {
-            write-host "Контейнер найден. Останавливаем и удаляем..."
-            docker stop node-demo-app
-            docker rm node-demo-app
-        } else {
-            write-host "Старый контейнер не запущен, пропускаем шаг."
-        }
-      shell: powershell
-
-    # 5. Собираем Docker-образ
-    - name: Build Docker image
-      run: docker build -t nodejs-demo-app:local -f build/Dockerfile .
+        docker compose down
+        docker compose up -d --build
       working-directory: ${{ github.workspace }}
-
-    # 6. Запускаем приложение
-    - name: Run new container
-      run: docker run -d --name node-demo-app -p 3000:3000 nodejs-demo-app:local
