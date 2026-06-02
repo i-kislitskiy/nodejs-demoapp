@@ -29,7 +29,7 @@ jobs:
       shell: powershell
 
     - name: Build Docker image
-      run: docker build -t nodejs-demo-app:local .
+      run: docker build -t nodejs-demo-app:local "${{ github.workspace }}"
 
     - name: Run new container
       run: docker run -d --name node-demo-app -p 3000:3000 nodejs-demo-app:local
