@@ -1,26 +1,21 @@
 name: Local Docker CD
 
-# Включаем принудительное использование Node 24 для устранения варнингов
 env:
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: "true"
 
-# Пайплайн будет запускаться автоматически при любом git push в ветку main
 on:
   push:
     branches: [ "main" ]
 
 jobs:
   deploy:
-    # Указываем GitHub запускать команды строго на вашем локальном ПК
     runs-on: self-hosted
 
     steps:
-    # 1. Скачиваем свежий код из репозитория на ваш ПК
     - name: Checkout code
       uses: actions/checkout@v4
 
-    # 2. Останавливаем и удаляем старый контейнер, если он уже был запущен
-     - name: Stop old container
+    - name: Stop old container
       run: |
         $ErrorActionPreference = 'SilentlyContinue'
         docker stop node-demo-app
@@ -28,10 +23,8 @@ jobs:
         $ErrorActionPreference = 'Continue'
       shell: powershell
 
-    # 3. Собираем Docker-образ из Dockerfile, который уже есть в проекте
     - name: Build Docker image
       run: docker build -t nodejs-demo-app:local .
 
-    # 4. Запускаем приложение в Docker на порту 3000
     - name: Run new container
       run: docker run -d --name node-demo-app -p 3000:3000 nodejs-demo-app:local
