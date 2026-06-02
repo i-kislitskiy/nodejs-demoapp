@@ -1,0 +1,10 @@
+---
+- name: Deploy Node.js App with Docker Compose
+  hosts: localhost
+  connection: local
+  tasks:
+    - name: Ensure Docker Compose architecture is running
+      community.docker.docker_compose_v2:
+        project_src: "{{ ansible_env.WORKSPACE }}"
+        state: present
+        build: always
