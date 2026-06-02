@@ -1,5 +1,9 @@
 name: Local Docker CD
 
+# Включаем принудительное использование Node 24 для устранения варнингов
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: "true"
+
 # Пайплайн будет запускаться автоматически при любом git push в ветку main
 on:
   push:
