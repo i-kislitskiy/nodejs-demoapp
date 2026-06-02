@@ -12,10 +12,24 @@ jobs:
     runs-on: self-hosted
 
     steps:
+    # 1. Скачиваем свежий код
     - name: Checkout code
       uses: actions/checkout@v4
 
-    # 2. Проверяем наличие контейнера перед его остановкой
+    # 2. Настраиваем Node.js на вашем ПК для прогона тестов
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20'
+
+    # 3. Устанавливаем зависимости и запускаем встроенные тесты
+    - name: Install dependencies & Run Tests
+      run: |
+        npm ci
+        npm test
+      working-directory: ${{ github.workspace }}
+
+    # 4. Проверяем наличие контейнера (выполняется только если тесты прошли успешно!)
     - name: Stop old container
       run: |
         $containerExists = docker ps -a --filter "name=node-demo-app" --format "{{.Names}}"
@@ -28,9 +42,11 @@ jobs:
         }
       shell: powershell
 
+    # 5. Собираем Docker-образ
     - name: Build Docker image
       run: docker build -t nodejs-demo-app:local -f build/Dockerfile .
       working-directory: ${{ github.workspace }}
 
+    # 6. Запускаем приложение
     - name: Run new container
       run: docker run -d --name node-demo-app -p 3000:3000 nodejs-demo-app:local
