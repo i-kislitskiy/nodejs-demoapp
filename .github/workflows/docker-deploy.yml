@@ -20,10 +20,12 @@ jobs:
       uses: actions/checkout@v4
 
     # 2. Останавливаем и удаляем старый контейнер, если он уже был запущен
-    - name: Stop old container
+     - name: Stop old container
       run: |
-        docker stop node-demo-app 2>$null || $true
-        docker rm node-demo-app 2>$null || $true
+        $ErrorActionPreference = 'SilentlyContinue'
+        docker stop node-demo-app
+        docker rm node-demo-app
+        $ErrorActionPreference = 'Continue'
       shell: powershell
 
     # 3. Собираем Docker-образ из Dockerfile, который уже есть в проекте
