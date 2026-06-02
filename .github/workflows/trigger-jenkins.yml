@@ -1,0 +1,17 @@
+name: Trigger Local Jenkins via Runner
+
+on:
+  push:
+    branches: [ "main" ]
+
+jobs:
+  trigger:
+    # Запускаем строго на вашем локальном ПК, где крутится служба раннера
+    runs-on: self-hosted
+
+    steps:
+    - name: Trigger Jenkins Pipeline
+      run: |
+        # Отправляем локальный запрос в Jenkins, чтобы он начал сборку
+        Invoke-RestMethod -Uri "http://localhost:8080/job/node-demo-pipeline/build" -Method Post
+      shell: powershell
