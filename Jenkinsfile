@@ -44,17 +44,23 @@ pipeline {
                     kubectl apply -f webapp-k8s.yaml
                     kubectl apply -f app-servicemonitor.yaml
                 '''
+
+             withEnv(['JENKINS_NODE_COOKIE=dontKillMe']) {
                 sh '''
-                    # 1. Убиваем старый процесс проброса Grafana, если он остался от прошлой сборки
-                    pkill -f "kubectl port-forward deployment/kube-stack-grafana" || true
+                    # 1. Жестко убиваем старый процесс по порту 3006
+                    pkill -f "3006:3000" || true
                     sleep 2
                     
-                    # 2. Прорубаем туннель из изолированной сети k8s в подсеть WSL (172.25)
-                    # Перенаправляем логи в файл, чтобы команда nohup отпустила консоль Jenkins
+                    # 2. Запускаем процесс в фоне. Флаг & в конце и перенаправление логов ОБЯЗАТЕЛЬНЫ
                     nohup kubectl port-forward deployment/kube-stack-grafana 3006:3000 --address=0.0.0.0 > pf-grafana.log 2>&1 &
+                     
+                    # 3. Даем 2 секунды процессу запуститься и проверяем, что он не упал сразу
+                    sleep 2
+                    ps aux | grep "3006:3000" | grep -v grep
                     
                     echo "Grafana port-forward started on http://localhost:3006"
                 '''
+                }
             }
         }
     }
