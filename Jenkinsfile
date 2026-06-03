@@ -44,6 +44,17 @@ pipeline {
                     kubectl apply -f webapp-k8s.yaml
                     kubectl apply -f app-servicemonitor.yaml
                 '''
+                sh '''
+                    # 1. Убиваем старый процесс проброса Grafana, если он остался от прошлой сборки
+                    pkill -f "kubectl port-forward deployment/kube-stack-grafana" || true
+                    sleep 2
+                    
+                    # 2. Прорубаем туннель из изолированной сети k8s в подсеть WSL (172.25)
+                    # Перенаправляем логи в файл, чтобы команда nohup отпустила консоль Jenkins
+                    nohup kubectl port-forward deployment/kube-stack-grafana 3006:3000 --address=0.0.0.0 > pf-grafana.log 2>&1 &
+                    
+                    echo "Grafana port-forward started on http://localhost:3006"
+                '''
             }
         }
     }
