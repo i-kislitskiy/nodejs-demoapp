@@ -9,8 +9,8 @@ metadata:
 spec:
   selector:
     matchLabels:
-      app: node-app # Ищет Service вашего приложения с этим лейблом
+      app: node-app
   endpoints:
-  - port: web # Название порта в Service приложения, с которого снимать метрики
+  - port: web
     interval: 15s
-    path: /metrics # Эндпоинт с метриками вашего Node.js приложения
+    path: /metrics
