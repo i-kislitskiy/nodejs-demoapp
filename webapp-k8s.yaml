@@ -32,6 +32,7 @@ spec:
   selector:
     app: node-app
   ports:
-    - protocol: TCP
+    - name: web
+      protocol: TCP
       port: 3005
       targetPort: 3000

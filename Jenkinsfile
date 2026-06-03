@@ -42,6 +42,7 @@ pipeline {
                     # Применяем манифесты в кластер
                     kubectl apply -f mongo-k8s.yaml
                     kubectl apply -f webapp-k8s.yaml
+                    kubectl apply -f app-servicemonitor.yaml
                 '''
             }
         }

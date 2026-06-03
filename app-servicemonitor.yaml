@@ -1,0 +1,16 @@
+apiVersion: ://coreos.com
+kind: ServiceMonitor
+metadata:
+  name: node-app-monitor
+  # ВАЖНО: Лейбл ниже должен совпадать с тем, что ищет ваш Helm-Prometheus.
+  # Обычно это 'release: kube-stack' (имя вашего helm release)
+  labels:
+    release: kube-stack 
+spec:
+  selector:
+    matchLabels:
+      app: node-app # Ищет Service вашего приложения с этим лейблом
+  endpoints:
+  - port: web # Название порта в Service приложения, с которого снимать метрики
+    interval: 15s
+    path: /metrics # Эндпоинт с метриками вашего Node.js приложения
