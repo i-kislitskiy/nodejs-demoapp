@@ -1,7 +1,7 @@
 apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
 metadata:
-  name: node-app-monitor
+  name: node-app-service
   # ВАЖНО: Лейбл ниже должен совпадать с тем, что ищет ваш Helm-Prometheus.
   # Обычно это 'release: kube-stack' (имя вашего helm release)
   labels:
